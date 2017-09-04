@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 public class ReportView {
+
     private final Map<String, Object> payload;
     private final Date timestamp;
     private final String changingUser;
@@ -14,15 +15,15 @@ public class ReportView {
         this.changingUser = changingUser;
     }
 
+    public Map<String, Object> getPayload() {
+        return payload;
+    }
+
     public String getChangingUser() {
         return changingUser;
     }
 
     public Date getTimestamp() {
         return timestamp;
-    }
-
-    public Map<String, Object> getPayload() {
-        return payload;
     }
 }

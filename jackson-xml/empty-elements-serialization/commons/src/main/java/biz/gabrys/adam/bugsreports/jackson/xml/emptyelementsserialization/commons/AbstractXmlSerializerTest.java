@@ -36,8 +36,8 @@ public abstract class AbstractXmlSerializerTest {
         expected.append("      <amp>&amp;</amp>");
         expected.append("      <empty></empty>");
         expected.append("    </payload>");
-        expected.append("    <changingUser>system</changingUser>");
         expected.append("    <timestamp>" + date.getTime() + "</timestamp>");
+        expected.append("    <changingUser>system</changingUser>");
         expected.append("  </item>");
         expected.append("</report>");
 
