@@ -5,8 +5,9 @@ import java.util.Collection;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
-public abstract class AbstractXmlSerializer {
+public abstract class AbstractXmlSerializer implements XmlSerializer {
 
+    @Override
     public String toXml(final Collection<ReportView> reports) throws IOException {
         final XmlMapper mapper = new XmlMapper();
         configureMapper(mapper);

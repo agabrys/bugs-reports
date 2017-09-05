@@ -1,12 +1,12 @@
 package biz.gabrys.adam.bugsreports.jackson.xml.emptyelementsserialization.v289;
 
-import biz.gabrys.adam.bugsreports.jackson.xml.emptyelementsserialization.commons.AbstractXmlSerializer;
-import biz.gabrys.adam.bugsreports.jackson.xml.emptyelementsserialization.commons.AbstractXmlSerializerTest;
+import biz.gabrys.adam.bugsreports.jackson.xml.emptyelementsserialization.commons.XmlSerializer;
+import biz.gabrys.adam.bugsreports.jackson.xml.emptyelementsserialization.commons.XmlSerializerTest;
 
-public class SerializationProviderXmlSerializerTest extends AbstractXmlSerializerTest {
+public class SerializationProviderXmlSerializerTest extends XmlSerializerTest {
 
     @Override
-    protected AbstractXmlSerializer createSerializer() {
+    protected XmlSerializer createSerializer() {
         return new SerializationProviderXmlSerializer();
     }
 }

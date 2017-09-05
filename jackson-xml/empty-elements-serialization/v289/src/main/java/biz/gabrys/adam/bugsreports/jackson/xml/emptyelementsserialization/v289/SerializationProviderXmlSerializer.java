@@ -19,7 +19,8 @@ public class SerializationProviderXmlSerializer extends AbstractXmlSerializer {
         provider.setNullValueSerializer(new JsonSerializer<Object>() {
             @Override
             public void serialize(final Object value, final JsonGenerator jgen, final SerializerProvider provider) throws IOException {
-                jgen.writeString("");
+                jgen.writeStartObject();
+                jgen.writeEndObject();
             }
         });
         mapper.setSerializerProvider(provider);
