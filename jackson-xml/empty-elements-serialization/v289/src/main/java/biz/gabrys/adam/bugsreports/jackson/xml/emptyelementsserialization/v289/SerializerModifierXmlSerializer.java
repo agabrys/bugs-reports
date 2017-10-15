@@ -6,13 +6,16 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.BeanDescription;
+import com.fasterxml.jackson.databind.BeanProperty;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.ContextualSerializer;
+import com.fasterxml.jackson.databind.ser.ResolvableSerializer;
 import com.fasterxml.jackson.databind.type.ArrayType;
 import com.fasterxml.jackson.databind.type.CollectionLikeType;
 import com.fasterxml.jackson.databind.type.CollectionType;
@@ -43,8 +46,8 @@ public class SerializerModifierXmlSerializer extends AbstractXmlSerializer {
             }
 
             @Override
-            public JsonSerializer<?> modifyMapSerializer(SerializationConfig config, MapType valueType, BeanDescription beanDesc,
-                    JsonSerializer<?> serializer) {
+            public JsonSerializer<?> modifyMapSerializer(final SerializationConfig config, final MapType valueType,
+                    final BeanDescription beanDesc, final JsonSerializer<?> serializer) {
                 final JsonSerializer<?> modifiedSerializer = super.modifyMapSerializer(config, valueType, beanDesc, serializer);
                 return new PrintEmptyElementsJsonSerializer(modifiedSerializer, o -> ((Map<?, ?>) o).isEmpty());
             }
@@ -66,7 +69,8 @@ public class SerializerModifierXmlSerializer extends AbstractXmlSerializer {
         return module;
     }
 
-    private static class PrintEmptyElementsJsonSerializer extends JsonSerializer<Object> {
+    private static class PrintEmptyElementsJsonSerializer extends JsonSerializer<Object>
+            implements ResolvableSerializer, ContextualSerializer {
 
         private final JsonSerializer<Object> serializer;
         private final Predicate<Object> predicate;
@@ -78,14 +82,28 @@ public class SerializerModifierXmlSerializer extends AbstractXmlSerializer {
         }
 
         @Override
-        public void serialize(final Object object, final JsonGenerator generator, final SerializerProvider provider)
-                throws IOException, JsonProcessingException {
+        public void serialize(final Object object, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 
             if (predicate.test(object)) {
                 generator.writeStartObject();
                 generator.writeEndObject();
             } else {
                 serializer.serialize(object, generator, provider);
+            }
+        }
+
+        @Override
+        public JsonSerializer<?> createContextual(final SerializerProvider prov, final BeanProperty property) throws JsonMappingException {
+            if (serializer instanceof ContextualSerializer) {
+                return ((ContextualSerializer) serializer).createContextual(prov, property);
+            }
+            return serializer;
+        }
+
+        @Override
+        public void resolve(final SerializerProvider provider) throws JsonMappingException {
+            if (serializer instanceof ResolvableSerializer) {
+                ((ResolvableSerializer) serializer).resolve(provider);
             }
         }
     }
