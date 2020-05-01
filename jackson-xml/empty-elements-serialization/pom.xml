@@ -11,6 +11,7 @@
 
     <modules>
         <module>commons</module>
+        <module>utku-proposal</module>
         <module>v289</module>
         <module>v290</module>
     </modules>
